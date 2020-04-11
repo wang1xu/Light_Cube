@@ -1,0 +1,4 @@
+".\Objects\dian.obj",
+".\Objects\main.obj" 
+TO ".\Objects\444" 
+PRINT(".\Listings\444.m51") RAMSIZE(256) 

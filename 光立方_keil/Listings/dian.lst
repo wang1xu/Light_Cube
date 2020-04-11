@@ -1,0 +1,272 @@
+C51 COMPILER V9.54   DIAN                                                                  08/23/2018 16:15:28 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE DIAN
+OBJECT MODULE PLACED IN .\Objects\dian.obj
+COMPILER INVOKED BY: D:\keil5\C51\BIN\C51.EXE dian.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\444) DEBUG OBJECTEXTEND PRINT(.\
+                    -Listings\dian.lst) TABS(2) OBJECT(.\Objects\dian.obj)
+
+line level    source
+
+   1          #include "dian.h"
+   2          
+   3          void delay(u16 i)
+   4          {
+   5   1        while(i--);
+   6   1      }
+   7          
+   8          void delay500ms(void)   //误差 0us
+   9          {
+  10   1          unsigned char a,b,c;
+  11   1          for(c=23;c>0;c--)
+  12   1              for(b=152;b>0;b--)
+  13   1                  for(a=70;a>0;a--);
+  14   1      }
+  15          
+  16          void start_init(void)
+  17          {
+  18   1        P1=0xf0;
+  19   1        P0=0;
+  20   1        Shu34=1;
+  21   1        Shu12=1;
+  22   1        Shu34=0;
+  23   1        Shu12=0;
+  24   1      }
+  25          
+  26          void init()
+  27          {
+  28   1        P1=0;
+  29   1      }
+  30            
+  31          void liecon(u8 lie)
+  32          {
+  33   1        if(lie<=7)
+  34   1        {
+  35   2          P0=shu[lie];
+  36   2          Shu12=1;
+  37   2        }
+  38   1        else
+  39   1        {
+  40   2          lie=lie-8;
+  41   2          P0=shu[lie];
+  42   2          Shu34=1;
+  43   2        }
+  44   1        Shu12=0;
+  45   1        Shu34=0;
+  46   1      }
+  47          
+  48          void cengcon(u8 cen)
+  49          {
+  50   1        P1=ceng[cen];
+  51   1        delay(10);
+  52   1      }
+  53          
+  54          void zuobiao(u8 x,u8 y)
+C51 COMPILER V9.54   DIAN                                                                  08/23/2018 16:15:28 PAGE 2   
+
+  55          {
+  56   1        u8 con;
+  57   1        con=4*x+y;
+  58   1        liecon(con);
+  59   1      }
+  60          
+  61          void dian(u8 x,u8 y,u8 cen)//竖，层
+  62          {
+  63   1        cengcon(cen);
+  64   1        zuobiao(x,y);
+  65   1          
+  66   1      }
+  67          void donghua1(void)
+  68          {
+  69   1        u8 i,j;
+  70   1        u8 k=0;
+  71   1        for(i=0;i<=3;i++)
+  72   1        {
+  73   2          while(1)
+  74   2          {
+  75   3            for(j=0;j<=3;j++)
+  76   3            {
+  77   4              dian(j,j,i);
+  78   4              delay(2000);
+  79   4              init();
+  80   4            }
+  81   3            k++;
+  82   3            if(k<=500)
+  83   3            {
+  84   4              k=0;
+  85   4              break;
+  86   4            }
+  87   3          }
+  88   2          delay(50000);
+  89   2        }
+  90   1      }
+  91          void donghua2(void)
+  92          {
+  93   1        u8 j;
+  94   1        j=0;
+  95   1        while(1)
+  96   1        {
+  97   2          cengcon(j);
+  98   2          P0=0xff;
+  99   2          Shu12=1;
+ 100   2          Shu34=1;
+ 101   2          Shu12=0;
+ 102   2          Shu34=0;
+ 103   2          delay500ms();
+ 104   2          delay500ms();
+ 105   2          start_init();
+ 106   2          j++;
+ 107   2          if(j>=4)
+ 108   2          {
+ 109   3            j=0;
+ 110   3            break;
+ 111   3          }
+ 112   2        }
+ 113   1      }
+ 114          void donghua3(void)
+ 115          {
+ 116   1          u8 j;
+C51 COMPILER V9.54   DIAN                                                                  08/23/2018 16:15:28 PAGE 3   
+
+ 117   1          u16 i;
+ 118   1          for(i=0;i<=3000;i++)
+ 119   1          {
+ 120   2            cengcon(j);
+ 121   2            P0=0xff;
+ 122   2            Shu12=1;
+ 123   2            Shu34=1;
+ 124   2            Shu12=0;
+ 125   2            Shu34=0;
+ 126   2            delay(100);
+ 127   2            j++;
+ 128   2            if(j>=4)
+ 129   2              j=0;
+ 130   2            start_init();
+ 131   2          }
+ 132   1      }
+ 133          void donghua4(void)
+ 134          {
+ 135   1        u8 zhuan1[]={0x9f,0x09,0x09,0x9f};
+ 136   1        u8 zhuan2[]={0xf9,0x90,0x90,0xf9};
+ 137   1        u8 i;
+ 138   1        for(i=0;i<=3;i++)
+ 139   1        {
+ 140   2          P0=zhuan1[i];
+ 141   2          Shu12=1;
+ 142   2          Shu12=0;
+ 143   2          cengcon(i);
+ 144   2          delay(200);
+ 145   2          start_init();
+ 146   2          P0=zhuan2[i];
+ 147   2          Shu34=1;
+ 148   2          Shu34=0;
+ 149   2          cengcon(i);
+ 150   2          delay(200);
+ 151   2          start_init();
+ 152   2        }
+ 153   1      }
+ 154          void donghua4_shanshuo(void)
+ 155          {
+ 156   1        u8 j;
+ 157   1        j=0;
+ 158   1        while(1)
+ 159   1          {
+ 160   2            if(j>=30)
+ 161   2            {
+ 162   3              j=0;
+ 163   3              break;
+ 164   3            }
+ 165   2            donghua4();
+ 166   2            j++;
+ 167   2          }
+ 168   1          delay500ms();
+ 169   1        
+ 170   1      }
+ 171          void donghua5(void)
+ 172          {
+ 173   1        u8 zhuan[]={0x01,0x07,0x11,0x04,0x81,0x42,0x03,0x44,0x88};
+ 174   1        u8 i,j;
+ 175   1        for(j=0;j<=8;j++)
+ 176   1        {
+ 177   2          for(i=0;i<=3;i++)
+ 178   2          {
+C51 COMPILER V9.54   DIAN                                                                  08/23/2018 16:15:28 PAGE 4   
+
+ 179   3            P0=zhuan[j];
+ 180   3            Shu12=1;
+ 181   3            Shu12=0;
+ 182   3            cengcon(3-i);
+ 183   3            delay(15000);
+ 184   3            start_init();
+ 185   3          }
+ 186   2          for(i=0;i<=3;i++)
+ 187   2          {
+ 188   3            P0=zhuan[8-j];
+ 189   3            Shu34=1;
+ 190   3            Shu34=0;
+ 191   3            cengcon(3-i);
+ 192   3            delay(15000);
+ 193   3            start_init();
+ 194   3          }
+ 195   2        }
+ 196   1        donghua2();
+ 197   1        start_init();
+ 198   1      }
+ 199          void donghua6(void)
+ 200          {
+ 201   1        u8 zhuan[]={0,1,2,3,7,11,15,14,13,12,8,4,5,6,9,10};
+ 202   1        u8 i,j,k;
+ 203   1        for(k=0;k<=2;k++)
+ 204   1        {
+ 205   2          for(j=0;j<=3;j++)
+ 206   2          {
+ 207   3            for(i=0;i<=15;i++)
+ 208   3            {
+ 209   4              if(j%2==0)
+ 210   4                liecon(zhuan[i]);
+ 211   4              else
+ 212   4                liecon(zhuan[15-i]);
+ 213   4              cengcon(j);
+ 214   4              delay(5000);
+ 215   4              //start_init();//不消隐，视觉效果更好
+ 216   4            }
+ 217   3          }
+ 218   2        }
+ 219   1      }
+ 220          void donghua6_xiaoyin(void)
+ 221          {
+ 222   1        u8 zhuan[]={0,1,2,3,7,11,15,14,13,12,8,4,5,6,9,10};
+ 223   1        u8 i,j,k;
+ 224   1        for(k=0;k<=2;k++)
+ 225   1        {
+ 226   2          for(j=0;j<=3;j++)
+ 227   2          {
+ 228   3            for(i=0;i<=15;i++)
+ 229   3            {
+ 230   4              if(j%2==0)
+ 231   4                liecon(zhuan[i]);
+ 232   4              else
+ 233   4                liecon(zhuan[15-i]);
+ 234   4              cengcon(j);
+ 235   4              delay(5000);
+ 236   4              start_init();//不消隐，视觉效果更好
+ 237   4            }
+ 238   3          }
+ 239   2        }
+ 240   1      }
+C51 COMPILER V9.54   DIAN                                                                  08/23/2018 16:15:28 PAGE 5   
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    610    ----
+   CONSTANT SIZE    =     49    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      53
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
